@@ -1,27 +1,37 @@
 
-# MagInkDash
-This repo contains the code needed to drive an E-Ink Magic Dashboard that uses a Raspberry Pi to automatically retrieve updated content from Google Calendar, OpenWeatherMap and OpenAI ChatGPT, format them into the desired layout, before serving it to a battery powered E-Ink display (Inkplate 10). Note that the code has only been tested on the specific hardware mentioned, but can be easily modified to work with other hardware (for both the server or display).
+## Background / Inspiration
+```
+"When you have your goals in front of you, they become a powerful compass that directs your decisions and actions. Stay focused, stay driven, and let your goals lead the way." - Unknown
 
-![20230412_214635](https://user-images.githubusercontent.com/5581989/231482915-154db674-9301-465d-8352-d2c4400093eb.JPG)
+"Goals kept in your heart remain wishes forever. Take them out, write them down, and keep them in sight as a constant reminder of what you're capable of achieving." - Les Brown
+```
 
-## Background
-Back in September 2021, I [shared about my E-Ink Calendar project (MagInkCal) on Reddit](https://www.reddit.com/r/raspberry_pi/comments/pugv7d/maginkcal_magic_calendar_project_completed_full/) (with [full source code on Github](https://github.com/speedyg0nz/MagInkCal/)), which was an attempt to replicate the [Android Magic Calendar concept](https://www.youtube.com/watch?v=2KDkFgOHZ5I) that inspired many DIY projects over the years. While the calendar has been serving me extremely well, I wanted a dashboard which offered additonal information that was rich, timely and glanceable, such as the weather for the next hour just before leaving the house. While there were many projects that might achieve a similar outcome, I wanted something that met my specific needs. Hence, this project was born. You can read more about the story and join the conversation [over on Reddit](https://www.reddit.com/r/raspberry_pi/comments/12joara/maginkdash_magic_eink_dashboard_project_full/).
+This repo can help you set up an e-ink board and display your Trello and/or Google Keep data so your goals can be seen every day.
+
+
+# InkCheck
+This is a forked repo from [MagInkDash](https://github.com/markfodor/MagInkDash). That project was used as a base for everything here.
+So if you have the opportunity, buy that guy a coffee (link on the MagInkDash README). :v:
+
+InkCheck however differs in many aspects.
+It is able to display your Google Keep and/or Trello data on an [Inkplate E-Ink Display](https://soldered.com/product/soldered-inkplate-10-9-7-e-paper-board-with-enclosure-copy/).
+
+You can use it to display:
+- your daily schedule
+- your long-term goal
+- a TODO list
+- any text/quote you want to keep in mind
 
 ## Hardware Required
-- [Raspberry Pi](https://www.raspberrypi.org/) - Used as a server to retrieve content and generate a dashboard for the E-Ink display so any model would do. Personally, I dug out an old Raspberry Pi Model B Revision 2.0 from 2011 and it works fine for this purpose. In fact, it doesn't even need to be a RPi. Any other Single Board Computer, or old computer, or even a cloud service that runs the code would suffice.
-- [Inkplate 10 Battery Powered E-Ink Display](https://soldered.com/product/soldered-inkplate-10-9-7-e-paper-board-with-enclosure-copy/) - Used as a client to display the generated dashboard. I went with this because it was an all-in-one with the enclosure and battery included so there's less hardware tinkering. But you could certainly go barebones and assemble the different parts yourself from scratch, i.e. display, microcontroller, case, and battery.
-
+- [Inkplate 10 E-Ink Display](https://soldered.com/product/soldered-inkplate-10-9-7-e-paper-board-with-enclosure-copy/) - Used as a client to display the generated image. If you go with this it will be less hardware tinkering.
+- A server, which is powerful enough to run the image generation. It could be a [Raspberry Pi](https://www.raspberrypi.org/)
 
 ## How It Works
 A cron job on RPi will trigger a Python script to run every hour to fetch calendar events from Google Calendar, weather forecast from OpenWeatherMap and random factoids from OpenAI's ChatGPT. The retrieved content is then formatted into the desired layout and saved as an image. An Apache server on the RPi will then host this image such that it can be accessed by the Inkplate 10. On the Inkplate 10, the corresponding script   will then connect to the RPi server on the local network via a WiFi connection, retrieve the image and display it on the E-Ink screen. The Inkplate 10 then goes to sleep to conserve battery. The dashboard remains displayed on the E-Ink screen, because well, E-Ink...
 
-Some features of the dashboard: 
+Some features of the board: 
 - **Battery Life**: As with similar battery powered devices, the biggest question is the battery life. I'm currently using a 1500mAh battery on the Inkplate 10 and based on current usage, it should last me around 3-4 months. With the 3000mAh that comes with the manufacturer assembled Inkplate 10, we could potentially be looking at 6-8 month battery life. With this crazy battery life, there are much more options available. Perhaps solar power for unlimited battery life? Or reducing the refresh interval to 15 or 30min to increase the information timeliness?
-- **Calendar and Weather**: I'm currently displaying calendar events and weather forecast for current day and the upcoming two days. No real reason other than the desire to know what my weekend looks like on a Friday, and therefore helping me to better plan my weekend. Unfortunately, if you have a busy calendar with numerous events on a single day, the space on the dashboard will be consumed very quickly. If so, you might wish to modify the code to reduce/limit the number of days/events to be displayed.
-- **OpenAI ChatGPT**: As with any new projects in 2023, we can't avoid bringing in ChatGPT. So I've also included a section in the dashboard to retrieve ChatGPT responses via OpenAI's API (free for now, paid in the future).  So far I'm using it to retrieve factoids on animals, historical figures, notable events, countries, world records, etc. It's a huge hit with the kids at home, and they'll be standing next to the dashboard on the hour to wait for the next refresh. The prompts fed to ChatGPT can certainly be customised, so please knock yourself out and think of the most outrageous things you can put on your dashboard. Note that you might have to test and adjust the prompts/parameters, else ChatGPT might return fairly repetitive responses, e.g. on Abraham Lincoln, Rosa Parks, Martin Luther King.
 - **Telegram Bot**: Although the battery life is crazy long on the Inkplate 10, I still wish to be notified when the battery runs low. To do so, I set up a Telegram Bot and the Inkplate will trigger the bot to send me a message if the measured battery voltage falls below a specified threshold. That said, with the bot set up, there's actually much more you could do, e.g. send yourself a message when it's to expected to rain in the next hour.
-
-![MagInkDash Features](https://user-images.githubusercontent.com/5581989/231484018-6ff6a883-3226-42c7-a387-fcef7ee9d49c.png)
 
 ## Setting Up 
 
@@ -64,32 +74,15 @@ python3 quickstart.py
 ```bash
 crontab -e
 ```
-9. Specifically, add the following command to crontab so that the MagInkDash Python script runs on the hour, every hour.
+9. Specifically, add the following command to crontab so that the InkCheck Python script runs on the hour, every hour.
 ```bash
-0 * * * * cd /location/to/your/MagInkDash && python3 main.py
+0 * * * * cd /location/to/your/InkCheck && python3 main.py
 ```
 10. As for the Inkplate, I'm not going to devote too much space here since there are [official resources that describe how to set it up](https://inkplate.readthedocs.io/en/latest/get-started.html). It may take some trial and error for those new to microcontroller programming but it's all worth it! Only the Arduino portion of the guide is relevant, and you'll need to be able to run *.ino scripts via Arduino IDE before proceeding. From there, run the "inkplate.ino" file from the "inkplate" folder from the Arduino IDE when connected to the Inkplate.
 
-12. That's all! Your Magic Dashboard should now be refreshed every hour! 
-
-![20230412_214652](https://user-images.githubusercontent.com/5581989/231485348-35d7e0df-034e-49aa-8500-223b2b3bdcc0.JPG)
-![20230412_215020](https://user-images.githubusercontent.com/5581989/231484068-aa6ce877-1e0a-49fe-b47e-7c024752f42c.JPG)
-Selfie and family portrait together with the MagInkCal
+12. That's all! Your Dashboard should now be refreshed every hour! 
 
 ## Acknowledgements
-- [Lexend Font](https://fonts.google.com/specimen/Lexend) and [Tilt Warp Font](https://fonts.google.com/specimen/Tilt+Warp): Fonts used for the dashboard display
+- [Lexend Font](https://fonts.google.com/specimen/Lexend)
 - [Bootstrap](https://getbootstrap.com/): Styling toolkit to customise the look of the dashboard
-- [Weather Icons](https://erikflowers.github.io/weather-icons/): Icons used for displaying of weather forecast information
 - [Freepik](https://www.freepik.com/): For the background image used in this dashboard
-  
-## Contributing
-I won't be updating this code much, since it serves my needs well. Nevertheless, feel free to fork the repo and modify it for your own purpose. At the same time, check out other similar projects, such as [InkyCal](https://github.com/aceisace/Inkycal) by [/u/aceisace](https://www.reddit.com/user/aceisace/). It's much more polished and also actively developed.
-
-## Buy Me A Coffee
-If this project has helped you in any way, do buy me a coffee so I can continue to build more of such projects in the future and share them with the community!
-
-<a href="https://www.buymeacoffee.com/speedygonz" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
-
-
-## What's Next
-Since building the Magic Calendar two years back, I've been looking at E-Ink tablets that emulate the experience of writing on paper, and allow the users to take notes on the go. Those familiar with this range of products would be aware of the Kindle Scribe, reMarkable tablet, Ratta Supernote, Kobo Elipsa and many others. I've had some limited success with getting a Kindle Paperwhite to display a calendar while sleeping but it felt too "hacky" and prone to breaking when Amazon updates the OS. I'm still looking for the right device (possibly a PineNote?), so if you're aware of any suitable candidates, do let me know!

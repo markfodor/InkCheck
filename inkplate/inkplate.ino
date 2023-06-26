@@ -26,7 +26,7 @@ Inkplate display(INKPLATE_3BIT);
 
 const char ssid[] = "YOUR WIFI SSID";    // Your WiFi SSID
 const char *password = "YOUR WIFI PASSWORD"; // Your WiFi password
-const char *imgurl = "http://url.to.your.server/maginkdash.png"; // Your dashboard image web address
+const char *imgurl = "http://url.to.your.server/inkcheck.png"; // Your dashboard image web address
 
 // Initialize Telegram BOT
 #define BOTtoken "YOUR TELEGRAM BOT TOKEN"  // your Bot Token (Get from Botfather)

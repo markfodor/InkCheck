@@ -1,13 +1,16 @@
 {
-  "displayTZ": "Asia/Hong_Kong",
-  "calendars": ["primary"],
-  "numCalDaysToShow": 3,
-  "owm_api_key": "ENTER YOUR OWN API KEY HERE",
-  "lat": 22.3193,
-  "lon": 114.1694,
-  "imageWidth": 1200,
-  "imageHeight": 825,
-  "rotateAngle": 0,
-  "openai_api_key": "ENTER YOUR OWN API KEY HERE",
-  "path_to_server_image": "/var/www/html/maginkdash.png"
+    "timezone": "Europe/Madrid",
+    "timestampFormat": "%Y.%m.%d %H:%M:%S",
+    "googleKeepUsername": "YOUR_MAIL_ADDRESS",
+    "googleKeepPassword": "YOUR_PASSWORD",
+    "googleKeepNoteName": "NAME_OF_THE_NOTE",
+    "trelloKey": "YOUR_TRELLO_KEY",
+    "trelloSecret": "YOUR_TRELLO_SECRET",
+    "trelloToken": "YOUR_TRELLO_TOKEN",
+    "trelloBoard": "NAME_OF_THE_TRELLO_BOARD",
+    "trelloList": "NAME_OF_THE_TRELLO_LIST",
+    "imageWidth": 1200,
+    "imageHeight": 825,
+    "rotateAngle": 0,
+    "destinationFolder": "RESULT_IMAGE_PATH"
 }
