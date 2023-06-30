@@ -79,7 +79,7 @@ class Renderer:
 # timestamp, googleKeepNoteName, google_keep_items, trelloList, trello_items, destinationFolder
     def render(self, timestamp, googleKeepNoteName, is_google_keep_list, google_keep_items, trello_list_name, trello_items, destinationFolder):
         templateLodaer = FileSystemLoader(self.currPath)
-        template = Environment(loader = templateLodaer).get_template(self.inputHtmlTemplate)
+        template = Environment(loader = templateLodaer, autoescape=True).get_template(self.inputHtmlTemplate)
         rendered_template = template.render(
             timestamp = timestamp,
             googleKeepNoteName = googleKeepNoteName,
@@ -98,8 +98,12 @@ class Renderer:
         self.copy_to_destionation_folder(destinationFolder)
     
     def copy_to_destionation_folder(self, destinationFolder):
+        if not destinationFolder or not os.path.isdir(destinationFolder):
+            logger.error('Destination folder is not configured properly.')
+            return
+
         if not os.path.exists(destinationFolder):
-            os.mkdir(destinationFolder)
+            os.makedirs(destinationFolder)
             logger.info(f"Destination folder created: {destinationFolder}")
         
         shutil.copy(self.outputImagePath, destinationFolder)

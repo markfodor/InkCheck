@@ -1,15 +1,16 @@
-
+# InkCheck
 ## Background / Inspiration
 ```
-"When you have your goals in front of you, they become a powerful compass that directs your decisions and actions. Stay focused, stay driven, and let your goals lead the way." - Unknown
+"When you have your goals in front of you, they become a powerful compass that directs your decisions and actions.
+Stay focused, stay driven, and let your goals lead the way." - Unknown
 
-"Goals kept in your heart remain wishes forever. Take them out, write them down, and keep them in sight as a constant reminder of what you're capable of achieving." - Les Brown
+"Goals kept in your heart remain wishes forever.
+Take them out, write them down, and keep them in sight as a constant reminder of what you're capable of achieving." - Les Brown
 ```
 
 This repo can help you set up an e-ink board and display your Trello and/or Google Keep data so your goals can be seen every day.
 
-
-# InkCheck
+## General description
 This is a forked repo from [MagInkDash](https://github.com/markfodor/MagInkDash). That project was used as a base for everything here.
 So if you have the opportunity, buy that guy a coffee (link on the MagInkDash README). :v:
 
