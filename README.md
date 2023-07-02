@@ -8,7 +8,16 @@ Stay focused, stay driven, and let your goals lead the way." - Unknown
 Take them out, write them down, and keep them in sight as a constant reminder of what you're capable of achieving." - Les Brown
 ```
 
-This repo can help you set up an e-ink board and display your Trello and/or Google Keep data so your goals can be seen every day.
+This repo can help you set up an e-ink board and display your Trello and Google Keep data so your goals can be seen every day.
+
+![InkCheck](https://user-images.githubusercontent.com/3463702/250285813-c93ab4b4-c946-4134-a144-b92ad8b61ca0.jpg)
+
+### Google Keep mapping
+![Keep](https://user-images.githubusercontent.com/3463702/250350631-abae8a92-2ef2-48c3-8082-0c4bc58d943a.jpg)
+It also works with lists as the following Trello example shows. It is rendered the same way.
+
+### Trello mapping
+![Trello](https://user-images.githubusercontent.com/3463702/250350632-9970813a-3a66-47c2-b825-de2e0113df19.jpg)
 
 ## General description
 This is a forked repo from [MagInkDash](https://github.com/markfodor/MagInkDash). That project was used as a base for everything here.
@@ -28,7 +37,7 @@ You can use it to display:
 - A server, which is powerful enough to run the image generation. It could be a [Raspberry Pi](https://www.raspberrypi.org/)
 
 ## How It Works
-A cron job on RPi will trigger a Python script to run every hour to fetch calendar events from Google Calendar, weather forecast from OpenWeatherMap and random factoids from OpenAI's ChatGPT. The retrieved content is then formatted into the desired layout and saved as an image. An Apache server on the RPi will then host this image such that it can be accessed by the Inkplate 10. On the Inkplate 10, the corresponding script   will then connect to the RPi server on the local network via a WiFi connection, retrieve the image and display it on the E-Ink screen. The Inkplate 10 then goes to sleep to conserve battery. The dashboard remains displayed on the E-Ink screen, because well, E-Ink...
+A cron job on your server will trigger a Python script to run every hour (or the set interval) to fetch Google Keep and/or Trello data.. The retrieved content is then formatted into the desired layout and saved as an image. An Apache server will then host this image such that it can be accessed by the Inkplate 10. On the Inkplate 10, the corresponding script  will then connect to the server on the local network via WiFi connection, retrieve the image and display it on the E-Ink screen. The Inkplate 10 then goes to sleep to conserve battery. The image remains displayed on the E-Ink screen.
 
 Some features of the board: 
 - **Battery Life**: As with similar battery powered devices, the biggest question is the battery life. I'm currently using a 1500mAh battery on the Inkplate 10 and based on current usage, it should last me around 3-4 months. With the 3000mAh that comes with the manufacturer assembled Inkplate 10, we could potentially be looking at 6-8 month battery life. With this crazy battery life, there are much more options available. Perhaps solar power for unlimited battery life? Or reducing the refresh interval to 15 or 30min to increase the information timeliness?

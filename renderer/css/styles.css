@@ -32,6 +32,7 @@ h1, h2, p, span, .h1, .h2, .p, .span  {
 }
 
 .update-date {
+    font-size: 2rem;
     position: absolute;
     bottom: 0;
     right: 0;
