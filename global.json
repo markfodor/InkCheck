@@ -1,0 +1,8 @@
+{
+    "timezone": "Europe/Madrid",
+    "timestampFormat": "%Y.%m.%d %H:%M:%S",
+    "imageWidth": 1200,
+    "imageHeight": 825,
+    "rotateAngle": 0,
+    "destinationFolder": ""
+}

@@ -9,40 +9,28 @@ from datetime import datetime as dt
 from pytz import timezone
 from logger.logger import logger
 from renderer.renderer import Renderer
-from googlekeep.googlekeephelper import googleKeepHelper
-from trelloparser.trellohelper import TrelloHelper
+from collectors.googlekeep.googleKeepCollector import GoogleKeepHelper
+from collectors.trello.trelloCollector import TrelloCollector
 
 
 if __name__ == '__main__':
-    configFile = open('config.json')
+    configFile = open('global.json')
     config = json.load(configFile)
 
     timeZone = timezone(config['timezone'])
     timestampFormat = config['timestampFormat']
-    googleKeepUsername = config['googleKeepUsername']
-    googleKeepPassword = config['googleKeepPassword']
-    googleKeepNoteName = config['googleKeepNoteName']
-    trelloKey = config['trelloKey']
-    trelloSecret = config['trelloSecret']
-    trelloToken = config['trelloToken']
-    trelloBoard = config['trelloBoard']
-    trelloList = config['trelloList']
     imageWidth = config['imageWidth']
     imageHeight = config['imageHeight']
     rotateAngle = config['rotateAngle']
     destinationFolder = config['destinationFolder']
 
-    logger.info('Config is set.')
+    logger.info('Global config is set.')
 
     timestamp = dt.now(timeZone).strftime(timestampFormat)
-
-    googlekeephelper = googleKeepHelper(googleKeepUsername, googleKeepPassword)
-    is_google_keep_list, google_keep_items = googlekeephelper.search_note_id_by_name(googleKeepNoteName, True)
-
-    trello_helper = TrelloHelper(trelloKey, trelloToken)
-    trello_items = trello_helper.get_data(trelloBoard, trelloList)
+    google_keep_data = GoogleKeepHelper().search_node_id_by_name(True)
+    trello_data = TrelloCollector().get_data()
 
     renderer = Renderer(imageWidth, imageHeight, rotateAngle)
-    renderer.render(timestamp, googleKeepNoteName, is_google_keep_list, google_keep_items, trelloList, trello_items, destinationFolder)
+    renderer.render(timestamp, google_keep_data, trello_data, destinationFolder)
 
-    logger.info("Inkcheck is updated.")
+    logger.info("Inkcheck image is updated.")
