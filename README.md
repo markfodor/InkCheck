@@ -12,27 +12,19 @@ This repo can help you set up an e-ink board and display your Trello and Google 
 
 ![InkCheck](https://user-images.githubusercontent.com/3463702/250285813-c93ab4b4-c946-4134-a144-b92ad8b61ca0.jpg)
 
-### Google Keep mapping
-![Keep](https://user-images.githubusercontent.com/3463702/250350631-abae8a92-2ef2-48c3-8082-0c4bc58d943a.jpg)
-It also works with lists as the following Trello example shows. It is rendered the same way.
-
-### Trello mapping
-![Trello](https://user-images.githubusercontent.com/3463702/250350632-9970813a-3a66-47c2-b825-de2e0113df19.jpg)
-
-## General description
-This is a forked repo from [MagInkDash](https://github.com/markfodor/MagInkDash). That project was used as a base for everything here.
-So if you have the opportunity, buy that guy a coffee (link on the MagInkDash README). :v:
-
-InkCheck however differs in many aspects.
-It is able to display your Google Keep and/or Trello data on an [Inkplate E-Ink Display](https://soldered.com/product/soldered-inkplate-10-9-7-e-paper-board-with-enclosure-copy/).
-
 You can use it to display:
 - your daily schedule
 - your long-term goal
 - a TODO list
 - any text/quote you want to keep in mind
 
-## Hardware Required
+## Features
+- Periodical image refresh (1 hour with the default setup)
+- Landscape and portrait mode
+- Renders 2 data columns
+- Data providers: Trello, Google Keep
+
+## Hardware
 - [Inkplate 10 E-Ink Display](https://soldered.com/product/soldered-inkplate-10-9-7-e-paper-board-with-enclosure-copy/) - Used as a client to display the generated image. If you go with this it will be less hardware tinkering.
 - A server, which is powerful enough to run the image generation. It could be a [Raspberry Pi](https://www.raspberrypi.org/)
 
@@ -74,28 +66,28 @@ cd InkCheck
 pip install -r requirements.txt
 ```
 
-6. Fill the variables in the config.json.
+6. Fill the variables in the global.json. Most of the variables are pre-filled, _destinationFolder_ should be the path where your Apache server is running. Sidenote: You can switch between portait and landscape mode by swtiching the _imageWidth_ and _imageHeight_ values.
 
-7. Do a test run and check the logs. If everything is ok you should not see any error logs.
+7. Fill the config.json files for the collectors. More info at the [Data Collectors](#data-collectors)
+
+8. Do a test run and check the logs. If everything is ok you should not see any error logs.
 ```bash
 python3 main.py
 ```
-This might takes a bit longer (depends on your hardware - 2-3 mins on a Raspberry Pi Zero). When it is done, you should be able to find the rendered html file (renderer/inkcheck.html) and the screenshot (output/inkcheck.png). The image should be available on your network if you check in a browser: YOUR_SERVER_IP/inkcheck.png
+This might takes a bit longer (depends on your hardware, 2-3 mins on a Raspberry Pi Zero). When it is done, you should be able to find the rendered html file (renderer/inkcheck.html) and the screenshot (output/inkcheck.png). The image should be available on your network if you check in a browser: YOUR_SERVER_IP/inkcheck.png
 
-7. Copy all the files (other than the "inkplate" folder) over to your RPi using your preferred means. 
-
-8. Run the following command in the RPi Terminal to open crontab.
+9. Run the following command in the RPi Terminal to open crontab.
 ```bash
 crontab -e
 ```
 
-9. Specifically, add the following command to crontab so that the InkCheck Python script runs on the hour, every hour.
+10. Specifically, add the following command to crontab so that the InkCheck Python script runs on the hour, every hour.
 ```bash
 0 * * * * cd /location/to/your/InkCheck && python3 main.py
 ```
 If you want to set an other interval check out the [crontab.guru](https://crontab.guru/) site.
 
-10. As for the Inkplate, I'm not going to devote too much space here since there are [official resources that describe how to set it up](https://inkplate.readthedocs.io/en/latest/get-started.html). It may take some trial and error for those new to microcontroller programming but it's all worth it! Only the Arduino portion of the guide is relevant, and you'll need to be able to run *.ino scripts via Arduino IDE before proceeding. From there, compile and upload the "inkplate.ino" file from the "inkplate" folder in the Arduino IDE when connected to the Inkplate. And do not forget to fill the ssid, password and imgurl fields at the top of the ino file. Oh, and the BOTtoken if you want to get notifications about the battery.
+11. As for the Inkplate, I'm not going to devote too much space here since there are [official resources that describe how to set it up](https://inkplate.readthedocs.io/en/latest/get-started.html). It may take some trial and error for those new to microcontroller programming but it's all worth it! Only the Arduino portion of the guide is relevant, and you'll need to be able to run *.ino scripts via Arduino IDE before proceeding. From there, compile and upload the "inkplate.ino" file from the "inkplate" folder in the Arduino IDE when connected to the Inkplate. And do not forget to fill the ssid, password and imgurl fields at the top of the ino file. Oh, and the BOTtoken if you want to get notifications about the battery.
 Common problems:
 - Inkplate is not connected
 - Inkplate is not ON - a light blue led should shine through the 3D-printed case next to the ON button.
@@ -105,7 +97,13 @@ Common problems:
 
 12. That's all! Your InkCheck should now be refreshed every hour!
 
+## Data Collectors
+Different data sources (e.g: Trello or Google Keep) are handled differently in separated data collectors. You can read more about the setup here:
+- [Google Keep](/collectors/googlekeep/README.md)
+- [Trello](/collectors/trello/README.md)
+
 ## Acknowledgements
+- [MagInkDash](https://github.com/markfodor/MagInkDash) - Source of the fork. If you have the opportunity, buy that guy a coffee (link on the MagInkDash README). :v:
 - [Lexend Font](https://fonts.google.com/specimen/Lexend)
 - [Jinja](https://jinja.palletsprojects.com/)
 - [Bootstrap](https://getbootstrap.com/)
@@ -113,9 +111,11 @@ Common problems:
 ## Contribution
 Feel free to fork/modify the code to your needs. If you want something to be in this repo, then just open an issue or a pull request.
 
-Things I want to add:
-- Generalize the code -> it would be easier to add a new source
-- Generalize the template to handle single and double coulmns
-- Portrait and landscape mode
+Things I want to add/modify:
+- Validate input values in the global.json (e.g: timezone)
+- Eliminate Apache server and make it pure Python.
+- Improve GoogleKeepCollector to use token if possible
+- Adjust template for checked list items (sort list and display in a different way)
+- Generalize the template to handle single and double columns
 - Docker support -> easier to setup the server
-- Optional: server endpoint to kickstart the image generation so you do not need to wait for the next refresh
+- Optional: server endpoint to kickstart the image generation so you do not need to wait for the next refresh, and easier to test

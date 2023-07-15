@@ -3,9 +3,10 @@ from trello import TrelloClient
 from logger.logger import logger
 from model.columnData import ColumnData
 from util.configHelper import read_config
+from collectors.abstractBaseCollector import AbstractBaseCollector
 
 
-class TrelloCollector:
+class TrelloCollector(AbstractBaseCollector):
 
     def __init__(self):
         config = read_config(str(pathlib.Path(__file__).parent.absolute()))
@@ -23,7 +24,7 @@ class TrelloCollector:
 
         self.client = TrelloClient(self.key, None, self.token, None)
 
-    def get_data(self):
+    def get_data(self) -> ColumnData:
         boards = self.client.search(self.board, True, ['boards'])
 
         if not boards:
@@ -35,7 +36,7 @@ class TrelloCollector:
 
         # "There can be only one" in the result set
         selected_board = boards[0]
-        data = ColumnData(title=self.board, is_list=True)
+        data: ColumnData = ColumnData(title=self.board, is_list=True)
 
         # these are a columns on the board
         lists = selected_board.all_lists()

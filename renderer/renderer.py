@@ -15,7 +15,7 @@ import os
 
 class Renderer:
 
-    def __init__(self, width, height, angle):
+    def __init__(self, width, height):
         # Initialize all the file and path variables here so it is easier to track things back
         self.input_html_template = 'inkcheck_template.html'
         self.output_folder = 'output'
@@ -31,7 +31,6 @@ class Renderer:
 
         self.image_width = width
         self.image_height = height
-        self.rotate_angle = angle
 
     def set_viewport_size(self, driver):
         # Extract the current window size from the driver
@@ -75,13 +74,12 @@ class Renderer:
         else:
             logger.error('ERROR during the screen capture.')
 
-    def render(self, timestamp, google_keep_data, trello_data, destination_folder):
+    def render(self, timestamp, data_list, destination_folder):
         template_loader = FileSystemLoader(self.curr_path)
         template = Environment(loader=template_loader, autoescape=True).get_template(self.input_html_template)
         rendered_template = template.render(
             timestamp=timestamp,
-            google_keep_data=google_keep_data,
-            trello_data=trello_data
+            data_list=data_list
         )
 
         with open(self.output_html_file_path, 'w+', encoding='utf-8') as file:

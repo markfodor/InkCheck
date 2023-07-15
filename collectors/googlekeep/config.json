@@ -1,5 +1,6 @@
 {
     "username": "YOUR_MAIL_ADDRESS",
     "password": "YOUR_PASSWORD",
-    "nodeName": "YOUR_NODE_NAME"
+    "nodeName": "YOUR_NODE_NAME",
+    "onlyUncheckedItems": true
 }

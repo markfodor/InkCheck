@@ -3,9 +3,10 @@ import gkeepapi
 from logger.logger import logger
 from model.columnData import ColumnData
 from util.configHelper import read_config
+from collectors.abstractBaseCollector import AbstractBaseCollector
 
 
-class GoogleKeepHelper:
+class GoogleKeepCollector(AbstractBaseCollector):
 
     def __init__(self):
         config = read_config(str(pathlib.Path(__file__).parent.absolute()))
@@ -13,7 +14,8 @@ class GoogleKeepHelper:
         if config:
             self.username = config['username']
             self.password = config['password']
-            self.nodeName = config['nodeName']
+            self.node_name = config['nodeName']
+            self.only_unchecked_items = config['onlyUncheckedItems']
 
             logger.info('Google Keep config is set.')
         else:
@@ -27,20 +29,20 @@ class GoogleKeepHelper:
         else:
             logger.error('Google Keep login failed.')
 
-    def get_items_on_node_by_node_id(self, node_id, only_unchecked):
+    def _get_items_on_node_by_node_id(self, node_id):
         node = self.client.get(node_id)
 
         if isinstance(node, gkeepapi.node.List):
-            data = ColumnData(title=self.nodeName, is_list=True)
+            data: ColumnData = ColumnData(title=self.node_name, is_list=True)
             for item in node.items:
-                if not only_unchecked or not item.checked:
+                if not self.only_unchecked_items or not item.checked:
                     data.items.append(item.text)
 
             logger.info('Data collection from Google Keep is done.')
             return data
         # assuming it is a simple text node
         else:
-            data = ColumnData(title=self.nodeName, is_list=False)
+            data: ColumnData = ColumnData(title=self.node_name, is_list=False)
             data.text = node.text
             return data
         
@@ -53,9 +55,10 @@ class GoogleKeepHelper:
                 return node.id
         return None
 
-    def search_node_id_by_name(self, only_unchecked):
-        nodeId = self._search_node_id(self.nodeName)
+    def get_data(self) -> ColumnData:
+        nodeId = self._search_node_id(self.node_name)
         if not nodeId:
-            logger.error(f"node not found with name: {self.nodeName}")
+            logger.error(f"node not found with name: {self.node_name}")
+            return None
         else:
-            return self.get_items_on_node_by_node_id(nodeId, only_unchecked)
+            return self._get_items_on_node_by_node_id(nodeId)
