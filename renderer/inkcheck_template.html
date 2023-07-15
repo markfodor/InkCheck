@@ -11,46 +11,28 @@
         <div class="container">
             <div class="row justify-content-center">
 
-                <!-- Left -->
-                <div class="col-md-6">
-                    <div class="row justify-content-center center-block text-center">
-                        <h2 class="col-1 list-title">{{ trello_list_name }}</h2>
-                    </div>
-
-                    <div class="row align-items-start">
-                        <div class="col-md-12">
-                            <ol class="list-unstyled">
-                                {% for item in trello_items %}
-                                    <li class="item">
-                                        <span> {{ item }} </span> 
-                                    </li>
-                                {% endfor %}
-                            </ol>
+                {% for data in data_list %}
+                    <div class="col-md-6">
+                        <div class="row justify-content-center center-block text-center">
+                            <h2 class="col-1 list-title">{{ data.title }}</h2>
+                        </div>
+                        <div class="row align-items-start">
+                            <div class="col-md-12">
+                                {% if data.is_list %}
+                                    <ol class="list-unstyled">
+                                        {% for item in data.items %}
+                                            <li class="item">
+                                                <span> {{ item|replace('\n', '<br>')|safe }} </span> 
+                                            </li>
+                                        {% endfor %}
+                                    </ol>
+                                {% else %}
+                                    <p class="text"> {{ data.text|replace('\n', '<br>')|safe }} </p>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Right -->
-                <div class="col-md-6">
-                    <div class="row justify-content-center center-block text-center">
-                        <h2 class="col-1 list-title">{{ googleKeepNoteName }}</h2>
-                    </div>
-                    <div class="row align-items-start">
-                        <div class="col-md-12">
-                            {% if is_google_keep_list %}
-                                <ol class="list-unstyled">
-                                    {% for item in google_keep_note_items %}
-                                        <li class="item">
-                                            <span> {{ item|replace('\n', '<br>')|safe }} </span> 
-                                        </li>
-                                    {% endfor %}
-                                </ol>
-                            {% else %}
-                                <p class="text"> {{ google_keep_note_items|replace('\n', '<br>')|safe }} </p>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
 
