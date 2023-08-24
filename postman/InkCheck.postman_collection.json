@@ -1,0 +1,68 @@
+{
+	"info": {
+		"_postman_id": "25f96584-0181-4d94-a196-348bee6cb7c5",
+		"name": "InkCheck",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3094741",
+		"_collection_link": "https://dark-meadow-7532.postman.co/workspace/Home-projects~d584b22a-7464-4b2e-acb7-f9d17a0dbbeb/collection/3094741-25f96584-0181-4d94-a196-348bee6cb7c5?action=share&source=collection_link&creator=3094741"
+	},
+	"item": [
+		{
+			"name": "Generate",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/generate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"generate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Logs",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/logs",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"logs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Image",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/image",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"image"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
