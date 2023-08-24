@@ -103,6 +103,7 @@ celerybeat.pid
 
 # Environments
 .venv
+venv
 
 # mkdocs documentation
 /site
