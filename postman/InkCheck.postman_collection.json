@@ -8,20 +8,16 @@
 	},
 	"item": [
 		{
-			"name": "Generate",
+			"name": "Server check",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:5000/generate",
-					"protocol": "http",
+					"raw": "{{host}}:{{port}}",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "5000",
-					"path": [
-						"generate"
-					]
+					"port": "{{port}}"
 				}
 			},
 			"response": []
@@ -32,14 +28,31 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:5000/logs",
-					"protocol": "http",
+					"raw": "{{host}}:{{port}}/logs",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "5000",
+					"port": "{{port}}",
 					"path": [
 						"logs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Generate",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}:{{port}}/generate",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"generate"
 					]
 				}
 			},
@@ -51,18 +64,49 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:5000/image",
-					"protocol": "http",
+					"raw": "{{host}}:{{port}}/image",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "5000",
+					"port": "{{port}}",
 					"path": [
 						"image"
 					]
 				}
 			},
 			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "http://localhost",
+			"type": "string"
+		},
+		{
+			"key": "port",
+			"value": "8080",
+			"type": "string"
 		}
 	]
 }

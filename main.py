@@ -67,8 +67,14 @@ def generate():
    logger.info(response)
    return jsonify({'message': response})
 
+@app.errorhandler(Exception)
+def handle_error(e):
+   message = "An error occurred: {}".format(e)
+   logger.error(message, exc_info=True)
+   return jsonify({'message':'An error occurred. Check the logs.'}), 500
+
 if __name__ == '__main__':
    app_config = read_appconfig('./global.json')
    logger.info('Global config is set.')
    
-   app.run()
+   app.run(host='0.0.0.0', port=8080)
