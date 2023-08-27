@@ -103,6 +103,7 @@ celerybeat.pid
 
 # Environments
 .venv
+venv
 
 # mkdocs documentation
 /site
@@ -116,5 +117,7 @@ dmypy.json
 .pyre/
 
 # Project-related
-/output
-/renderer/inkcheck.html
+output
+renderer/inkcheck.html
+collectors/trello/config.json
+collectors/googlekeep/config.json

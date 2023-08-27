@@ -112,8 +112,6 @@ Different data sources (e.g: Trello or Google Keep) are handled differently in s
 Feel free to fork/modify the code to your needs. If you want something to be in this repo, then just open an issue or a pull request.
 
 Things I want to add/modify:
-- Validate input values in the global.json (e.g: timezone)
-- Eliminate Apache server and make it pure Python.
 - Improve GoogleKeepCollector to use token if possible
 - Adjust template for checked list items (sort list and display in a different way)
 - Generalize the template to handle single and double columns
