@@ -118,6 +118,8 @@ dmypy.json
 
 # Project-related
 output
+app.log
+global.json
 renderer/inkcheck.html
 collectors/trello/config.json
 collectors/googlekeep/config.json
