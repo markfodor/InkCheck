@@ -18,6 +18,7 @@
 
 #include "Inkplate.h"
 #include <WiFi.h>
+#include <HTTPClient.h>
 #include <WiFiClientSecure.h>
 #include <UniversalTelegramBot.h>
 #include <ArduinoJson.h>
@@ -26,7 +27,8 @@ Inkplate display(INKPLATE_3BIT);
 
 const char ssid[] = "YOUR WIFI SSID";    // Your WiFi SSID
 const char *password = "YOUR WIFI PASSWORD"; // Your WiFi password
-const char *imgurl = "http://url.to.your.server/inkcheck.png"; // Your dashboard image web address
+const char *generateurl = "http://<INKCHECK IP>:8080/generate"; // Your InkCheck generate endpoint
+const char *imgurl = "http://<INKCHECK IP>:8080/image"; // Your InkCheck image endpoint
 
 // Initialize Telegram BOT
 #define BOTtoken "YOUR TELEGRAM BOT TOKEN"  // your Bot Token (Get from Botfather)
@@ -50,10 +52,35 @@ void setup()
     display.begin();
 
     // Join wifi, retrieve image, update display
-    display.joinAP(ssid, password);
+    int joinAPresult = display.joinAP(ssid, password);
+    if(joinAPresult == 1) {
+      Serial.println("Joined the AP.");
+    } else {
+      Serial.println("Error joining the AP. Error code: " + success);
+    }
+    
+    // Trigger image generation
+    Serial.println("Getting InkCheck image.");
+    HTTPClient http;
+    http.begin(generateurl);
+    if (http.GET() > 0) {
+      Serial.println(http.getString());
+    }
+
+    // Sleep for a minute until the image generation
+    Serial.println("Going to sleep for a minute.");
+    delay(60000);
+
+    // Get the image
     char url[256];
     strcpy(url, imgurl);
-    Serial.println(display.drawImage(url, display.PNG, 0, 0));
+    int drawResult = display.drawImage(url, display.PNG, 0, 0);
+    if (drawResult == 1) {
+      Serial.println("Image updated.");
+    } else {
+      Serial.println("Error drawing image. Error code: " + drawResult);
+    }
+    
     display.display();
     
     //uncomment or delete the following section if not using Telegram to send message when battery is low 
