@@ -4,13 +4,13 @@ instance, sized to the resolution of the eInk display and takes a screenshot.
 """
 
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 from time import sleep
 from jinja2 import Environment, FileSystemLoader
 from selenium.webdriver.common.by import By
 from logger.logger import logger
 import pathlib
-import shutil
+import sys
 import os
 
 class Renderer:
@@ -23,6 +23,9 @@ class Renderer:
         self.output_html = 'inkcheck.html'
         self.curr_path = str(pathlib.Path(__file__).parent.absolute())
         self.project_path = os.path.abspath(os.curdir)
+
+        logger.info(f"On platform: {sys.platform}")
+        self.is_windows = sys.platform.startswith('win')
         
         self.absolute_input_html_template_path = os.path.join(self.curr_path, self.input_html_template)
         self.absolute_output_folder = os.path.join(self.project_path, self.output_folder)
@@ -58,11 +61,18 @@ class Renderer:
         if not os.path.exists(self.absolute_output_folder):
             os.mkdir(self.absolute_output_folder)
 
-        opts = Options()
+        opts = webdriver.ChromeOptions()
         opts.add_argument("--headless")
         opts.add_argument("--hide-scrollbars")
         opts.add_argument('--force-device-scale-factor=1')
-        driver = webdriver.Chrome(options=opts)
+
+        if not self.is_windows:
+            binary_location = self.get_chrome()
+            logger.info(f"Chrome driver found: {binary_location}")
+            service = Service(executable_path=binary_location)
+            driver = webdriver.Chrome(service=service, options=opts)
+        else:
+            driver = webdriver.Chrome(options=opts)
         self.set_viewport_size(driver)
         
         driver.get('file://' + self.output_html_file_path)
@@ -74,7 +84,7 @@ class Renderer:
         else:
             logger.error('ERROR during the screen capture.')
 
-    def render(self, timestamp, data_list, destination_folder):
+    def render(self, timestamp, data_list):
         template_loader = FileSystemLoader(self.curr_path)
         template = Environment(loader=template_loader, autoescape=True).get_template(self.input_html_template)
         rendered_template = template.render(
@@ -88,16 +98,17 @@ class Renderer:
         logger.info(f"Template is rendered and saved to {self.output_html_file_path}")
         self.take_screenshot()
 
-        self.copy_to_destination_folder(destination_folder)
-    
-    def copy_to_destination_folder(self, destination_folder):
-        if not destination_folder or not os.path.isdir(destination_folder):
-            logger.error('Destination folder is not configured properly.')
-            return
-
-        if not os.path.exists(destination_folder):
-            os.makedirs(destination_folder)
-            logger.info(f"Destination folder created: {destination_folder}")
-        
-        shutil.copy(self.output_image_path, destination_folder)
-        logger.info(f"Image copied to destination folder: {destination_folder}")
+    # find the chrome driver on Linux distros
+    def get_chrome(self):
+        if os.path.isfile('/usr/bin/chromedriver'):
+            return '/usr/bin/chromedriver'
+        elif os.path.isfile('/usr/bin/chromium-browser'):
+            return '/usr/bin/chromium-browser'
+        elif os.path.isfile('/usr/bin/chromium'):
+            return '/usr/bin/chromium'
+        elif os.path.isfile('/usr/bin/chrome'):
+            return '/usr/bin/chrome'
+        elif os.path.isfile('/usr/bin/google-chrome'):
+            return '/usr/bin/google-chrome'
+        else:
+            return None

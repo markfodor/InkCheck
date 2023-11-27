@@ -3,6 +3,5 @@
     "timestampFormat": "%Y.%m.%d %H:%M:%S",
     "imageWidth": 1200,
     "imageHeight": 825,
-    "collectors": ["GoogleKeepCollector", "TrelloCollector"],
-    "destinationFolder": "YOUR_DESTINATION_FOLDER"
+    "collectors": ["GoogleKeepCollector", "TrelloCollector"]
 }

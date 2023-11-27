@@ -61,7 +61,7 @@ def generate():
       data_list.append(collector.get_data())
 
    renderer = Renderer(app_config.imageWidth, app_config.imageHeight)
-   renderer.render(timestamp, data_list, app_config.destinationFolder)
+   renderer.render(timestamp, data_list)
 
    response = 'Inkcheck image is updated.'
    logger.info(response)
