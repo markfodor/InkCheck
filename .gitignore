@@ -116,8 +116,12 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# IDE
+.idea/
+
 # Project-related
 output
 renderer/inkcheck.html
 collectors/trello/config.json
 collectors/googlekeep/config.json
+inkcheck/
