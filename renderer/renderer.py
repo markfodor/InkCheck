@@ -3,15 +3,13 @@ This script essentially generates a HTML file. It then fires up a headless Chrom
 instance, sized to the resolution of the eInk display and takes a screenshot.
 """
 
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from time import sleep
 from jinja2 import Environment, FileSystemLoader
 from selenium.webdriver.common.by import By
 from logger.logger import logger
 import pathlib
-import shutil
 import os
+from playwright.sync_api import sync_playwright
+
 
 class Renderer:
 
@@ -23,7 +21,7 @@ class Renderer:
         self.output_html = 'inkcheck.html'
         self.curr_path = str(pathlib.Path(__file__).parent.absolute())
         self.project_path = os.path.abspath(os.curdir)
-        
+
         self.absolute_input_html_template_path = os.path.join(self.curr_path, self.input_html_template)
         self.absolute_output_folder = os.path.join(self.project_path, self.output_folder)
         self.output_html_file_path = os.path.join(self.curr_path, self.output_html)
@@ -37,7 +35,7 @@ class Renderer:
         current_window_size = driver.get_window_size()
 
         # Extract the client window size from the html tag
-        html = driver.find_element(By.TAG_NAME,'html')
+        html = driver.find_element(By.TAG_NAME, 'html')
         inner_width = int(html.get_attribute("clientWidth"))
         inner_height = int(html.get_attribute("clientHeight"))
 
@@ -50,29 +48,23 @@ class Renderer:
             height=target_height
         )
 
-    def take_screenshot(self):
+    def _take_screenshot(self):
         if not os.path.exists(self.output_html_file_path):
-            logger.error(f"HTML file does not exist: {self.output_html_file_path}. Probably not created properly from the template.")
+            logger.error(
+                f"HTML file does not exist: {self.output_html_file_path}. Probably not created properly from the template.")
             return
-        
+
         if not os.path.exists(self.absolute_output_folder):
             os.mkdir(self.absolute_output_folder)
 
-        opts = Options()
-        opts.add_argument("--headless")
-        opts.add_argument("--hide-scrollbars")
-        opts.add_argument('--force-device-scale-factor=1')
-        driver = webdriver.Chrome(options=opts)
-        self.set_viewport_size(driver)
-        
-        driver.get('file://' + self.output_html_file_path)
-        sleep(1)
-
-        success = driver.get_screenshot_as_file(self.output_image_path)
-        if success:
-            logger.info('Screenshot captured and saved to file.')
-        else:
-            logger.error('ERROR during the screen capture.')
+        with sync_playwright() as playwright:
+            webkit = playwright.webkit
+            browser = webkit.launch()
+            context = browser.new_context()
+            page = context.new_page()
+            page.goto(f"file://{self.output_html_file_path}")
+            page.screenshot(path=self.output_image_path)
+            browser.close()
 
     def render(self, timestamp, data_list, destination_folder):
         template_loader = FileSystemLoader(self.curr_path)
@@ -86,11 +78,7 @@ class Renderer:
             file.write(rendered_template)
 
         logger.info(f"Template is rendered and saved to {self.output_html_file_path}")
-        self.take_screenshot()
 
-        self.copy_to_destination_folder(destination_folder)
-    
-    def copy_to_destination_folder(self, destination_folder):
         if not destination_folder or not os.path.isdir(destination_folder):
             logger.error('Destination folder is not configured properly.')
             return
@@ -98,6 +86,5 @@ class Renderer:
         if not os.path.exists(destination_folder):
             os.makedirs(destination_folder)
             logger.info(f"Destination folder created: {destination_folder}")
-        
-        shutil.copy(self.output_image_path, destination_folder)
-        logger.info(f"Image copied to destination folder: {destination_folder}")
+
+        self._take_screenshot()
