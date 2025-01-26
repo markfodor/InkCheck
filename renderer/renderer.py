@@ -4,13 +4,13 @@ instance, sized to the resolution of the eInk display and takes a screenshot.
 """
 
 from jinja2 import Environment, FileSystemLoader
-from selenium.webdriver.common.by import By
 from logger.logger import logger
 import pathlib
 import os
 from playwright.sync_api import sync_playwright
 
-
+# if case of any issue installing playwright:
+# https://github.com/microsoft/playwright-python/issues/1797
 class Renderer:
 
     def __init__(self, width, height):
