@@ -96,17 +96,5 @@
 				]
 			}
 		}
-	],
-	"variable": [
-		{
-			"key": "host",
-			"value": "http://localhost",
-			"type": "string"
-		},
-		{
-			"key": "port",
-			"value": "8080",
-			"type": "string"
-		}
 	]
 }
