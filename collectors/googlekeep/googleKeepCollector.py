@@ -23,11 +23,7 @@ class GoogleKeepCollector(AbstractBaseCollector):
             return 
 
         self.client = gkeepapi.Keep()
-        successful_login = self.client.login(self.username, self.password)
-        if(successful_login):
-            logger.info('Google Keep login was succesful.')
-        else:
-            logger.error('Google Keep login failed.')
+        self.client.authenticate(self.username, self.password)
 
     def _get_items_on_node_by_node_id(self, node_id):
         node = self.client.get(node_id)
