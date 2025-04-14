@@ -8,17 +8,15 @@
 ## Setup
 To generate an app password:
 
-1. Go to your [Google Account](https://myaccount.google.com/)
-2. Select Security.
-3. Under "Signing in to Google," select 2-Step Verification.
-4. At the bottom of the page, select App passwords.
-5. Enter a name that helps you remember where you’ll use the app password.
-6. Select Generate.
-7. Now you can copy the generated password to the config.json
+TODO
+1. Follow this [guide](https://github.com/rukins/gpsoauth-java/blob/b74ebca999d0f5bd38a2eafe3c0d50be552f6385/README.md#receiving-an-authentication-token)
+2. When you have the oauth_token copy that to the exchange.py file in this folder
+3. Follow comments and run the file
+4. The printed value goes to the password field of config.json
 ```
 {
     "username": "YOUR_MAIL_ADDRESS",
-    "password": "YOUR_PASSWORD",
+    "password": "YOUR_MASTER_TOKEN",
     "nodeName": "Daily schedule",
     "onlyUncheckedItems": true
 }

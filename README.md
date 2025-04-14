@@ -48,13 +48,8 @@ sudo raspi-config
 
 ```bash
 sudo apt update
-sudo apt-get install python3-pip
-sudo apt-get install chromium-chromedriver
-sudo apt-get install libopenjp2-7-dev
 sudo apt install git
-sudo apt-get install apache2 -y
-sudo chown pi:www-data /var/www/html
-sudo chmod 755 /var/www/html
+sudo apt-get install python3-pip
 ```
 
 4. Make sure that the Apache server is running. If you are on the same local network with your server, just type the IP addess of your server in the browser and it should load the default index.html.
@@ -63,7 +58,11 @@ sudo chmod 755 /var/www/html
 ```bash
 git clone https://github.com/markfodor/InkCheck
 cd InkCheck
+python -m venv inkcheck
+inkcheck/Scripts/activate
 pip install -r requirements.txt
+playwright install
+playwright install-deps
 ```
 
 6. Fill the variables in the global.json. Most of the variables are pre-filled, _destinationFolder_ should be the path where your Apache server is running. Sidenote: You can switch between portait and landscape mode by swtiching the _imageWidth_ and _imageHeight_ values.
